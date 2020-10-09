@@ -6,13 +6,30 @@ import { delay, materialize, dematerialize } from 'rxjs/operators';
 
 // array in local storage for registered users
 const usersKey = 'angular-master-details-crud-example-users';
-let users = JSON.parse(localStorage.getItem(usersKey)) || [{
+let persons = JSON.parse(localStorage.getItem(usersKey)) || [
+    {
     id: 1,
     adress: 'tunis',
     firstName: 'Fahmi',
     lastName: 'Chibani',
     email: 'fahmichibani@gmail.com',
- }];
+ },
+ {
+    id: 2,
+    adress: 'Ben Arous',
+    firstName: 'sami',
+    lastName: 'dridi',
+    email: 'sami@gmail.com',
+ },
+ {
+    id: 3,
+    adress: 'Ariana',
+    firstName: 'Jihen',
+    lastName: 'twati',
+    email: 'jihen@gmail.com',
+ }
+
+];
 
 @Injectable()
 export class FakeBackendInterceptor implements HttpInterceptor {
@@ -23,16 +40,16 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 
         function handleRoute() {
             switch (true) {
-                case url.endsWith('/users') && method === 'GET':
-                    return getUsers();
-                case url.match(/\/users\/\d+$/) && method === 'GET':
-                    return getUserById();
-                case url.endsWith('/users') && method === 'POST':
-                    return createUser();
-                case url.match(/\/users\/\d+$/) && method === 'PUT':
-                    return updateUser();
-                case url.match(/\/users\/\d+$/) && method === 'DELETE':
-                    return deleteUser();
+                case url.endsWith('/persons') && method === 'GET':
+                    return getPersons();
+                case url.match(/\/persons\/\d+$/) && method === 'GET':
+                    return getPersonById();
+                case url.endsWith('/persons') && method === 'POST':
+                    return createPerson();
+                case url.match(/\/persons\/\d+$/) && method === 'PUT':
+                    return updatePerson();
+                case url.match(/\/persons\/\d+$/) && method === 'DELETE':
+                    return deletePerson();
                 default:
                     // pass through any requests not handled above
                     return next.handle(request);
@@ -41,34 +58,34 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 
         // route functions
 
-        function getUsers() {
-            return ok(users.map(x => basicDetails(x)));
+        function getPersons() {
+            return ok(persons.map(x => basicDetails(x)));
         }
 
-        function getUserById() {
-            const user = users.find(x => x.id === idFromUrl());
-            return ok(basicDetails(user));
+        function getPersonById() {
+            const person = persons.find(x => x.id === idFromUrl());
+            return ok(basicDetails(person));
         }
 
-        function createUser() {
-            const user = body;
+        function createPerson() {
+            const person = body;
 
-            if (users.find(x => x.email === user.email)) {
-                return error(`User with the email ${user.email} already exists`);
+            if (persons.find(x => x.email === person.email)) {
+                return error(`User with the email ${person.email} already exists`);
             }
 
             // assign user id and a few other properties then save
-            user.id = newUserId();
-            delete user.confirmPassword;
-            users.push(user);
-            localStorage.setItem(usersKey, JSON.stringify(users));
+            person.id = newPersonId();
+            delete person.confirmPassword;
+            persons.push(person);
+            localStorage.setItem(usersKey, JSON.stringify(persons));
 
             return ok();
         }
 
-        function updateUser() {
+        function updatePerson() {
             let params = body;
-            let user = users.find(x => x.id === idFromUrl());
+            let person = persons.find(x => x.id === idFromUrl());
 
             // only update password if entered
             if (!params.password) {
@@ -76,15 +93,15 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             }
 
             // update and save user
-            Object.assign(user, params);
-            localStorage.setItem(usersKey, JSON.stringify(users));
+            Object.assign(person, params);
+            localStorage.setItem(usersKey, JSON.stringify(persons));
 
             return ok();
         }
 
-        function deleteUser() {
-            users = users.filter(x => x.id !== idFromUrl());
-            localStorage.setItem(usersKey, JSON.stringify(users));
+        function deletePerson() {
+            persons = persons.filter(x => x.id !== idFromUrl());
+            localStorage.setItem(usersKey, JSON.stringify(persons));
             return ok();
         }
 
@@ -101,8 +118,8 @@ export class FakeBackendInterceptor implements HttpInterceptor {
                 // call materialize and dematerialize to ensure delay even if an error is thrown. 
         }
 
-        function basicDetails(user) {
-            const { id, adress, firstName, lastName, email} = user;
+        function basicDetails(person) {
+            const { id, adress, firstName, lastName, email} = person;
             return { id, adress, firstName, lastName, email};
         }
 
@@ -111,8 +128,8 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             return parseInt(urlParts[urlParts.length - 1]);
         }
 
-        function newUserId() {
-            return users.length ? Math.max(...users.map(x => x.id)) + 1 : 1;
+        function newPersonId() {
+            return persons.length ? Math.max(...persons.map(x => x.id)) + 1 : 1;
         }
     } 
 }

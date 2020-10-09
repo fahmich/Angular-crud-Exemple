@@ -3,7 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
 
-import { UserService, AlertService } from '@app/_services';
+import {  AlertService, PersonService } from '@app/_services';
 import { MustMatch } from '@app/_helpers';
 
 @Component({ templateUrl: 'add-edit.component.html' })
@@ -18,7 +18,7 @@ export class AddEditComponent implements OnInit {
         private formBuilder: FormBuilder,
         private route: ActivatedRoute,
         private router: Router,
-        private userService: UserService,
+        private personService: PersonService,
         private alertService: AlertService
     ) {}
 
@@ -33,7 +33,7 @@ export class AddEditComponent implements OnInit {
             email: ['', [Validators.required, Validators.email]], 
         });
 
-             this.userService.getById(this.id)
+             this.personService.getById(this.id)
                 .pipe(first())
                 .subscribe(x => this.form.patchValue(x));
        
@@ -52,18 +52,18 @@ export class AddEditComponent implements OnInit {
         }
         this.loading = true;
         if (this.isAddMode) {
-            this.createUser();
+            this.createPerson();
         } else {
-            this.updateUser();
+            this.updatePerson();
         }
     }
 
-    private createUser() {
-        this.userService.create(this.form.value)
+    private createPerson() {
+        this.personService.create(this.form.value)
             .pipe(first())
             .subscribe({
                 next: () => {
-                    this.alertService.success('User added', { keepAfterRouteChange: true });
+                    this.alertService.success('Person added', { keepAfterRouteChange: true });
                     this.router.navigate(['../'], { relativeTo: this.route });
                 },
                 error: error => {
@@ -73,12 +73,12 @@ export class AddEditComponent implements OnInit {
             });
     }
 
-    private updateUser() {
-        this.userService.update(this.id, this.form.value)
+    private updatePerson() {
+        this.personService.update(this.id, this.form.value)
             .pipe(first())
             .subscribe({
                 next: () => {
-                    this.alertService.success('User updated', { keepAfterRouteChange: true });
+                    this.alertService.success('Person updated', { keepAfterRouteChange: true });
                     this.router.navigate(['../../'], { relativeTo: this.route });
                 },
                 error: error => {

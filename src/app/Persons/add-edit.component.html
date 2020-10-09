@@ -1,5 +1,5 @@
-﻿<h2 *ngIf="isAddMode">Add New User</h2>
-<h2 *ngIf="!isAddMode">Edit/Update User</h2>
+﻿<h2 *ngIf="isAddMode">Add New Person</h2>
+<h2 *ngIf="!isAddMode">Edit/Update Person</h2>
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <div class="form-row">
        
@@ -45,6 +45,6 @@
             <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
             Save
         </button>
-        <a routerLink="/users" class="btn btn-link">Cancel</a>
+        <a routerLink="/persons" class="btn btn-link">Cancel</a>
     </div>
 </form>

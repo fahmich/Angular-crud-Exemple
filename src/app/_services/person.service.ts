@@ -2,20 +2,20 @@
 import { HttpClient } from '@angular/common/http';
 
 import { environment } from '@environments/environment';
-import { User } from '@app/_models';
+import { Person } from '@app/_models';
 
-const baseUrl = `${environment.apiUrl}/users`;
+const baseUrl = `${environment.apiUrl}/persons`;
 
 @Injectable({ providedIn: 'root' })
-export class UserService {
+export class PersonService {
     constructor(private http: HttpClient) { }
 
     getAll() {
-        return this.http.get<User[]>(baseUrl);
+        return this.http.get<Person[]>(baseUrl);
     }
 
     getById(id: string) {
-        return this.http.get<User>(`${baseUrl}/${id}`);
+        return this.http.get<Person>(`${baseUrl}/${id}`);
     }
 
     create(params) {
