@@ -1,8 +1,8 @@
 ﻿ 
 export class Person { 
     id: string;
-    address: string;
+    adress: string;
     firstName: string;
     lastName: string;
     email: string;
-}
+ }

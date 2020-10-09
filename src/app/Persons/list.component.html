@@ -13,20 +13,19 @@
         <tr>
             <th style="width: 30%">FirstName</th>
             <th style="width: 30%">LastName</th>
-            <th style="width: 30%">Email</th>
-            <th style="width: 30%">Adress</th>
+            <th style="width: 30%"></th>
             <th style="width: 10%"></th>
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let person  of persons">
+        <tr *ngFor="let person  of persons" (onclick)="redirectTo(person.id)">
             <td>{{person.firstName}}</td>
             <td>{{person.lastName}}</td>
-            <td>{{person.email}}</td>
-            <td>{{person.adress}}</td>
+            <td> <button (click)=" redirectTo(person.id)" class="btn btn-sm  bg-delete-user" > <strong> More detail </strong> <i class="fa fa-arrow-right" aria-hidden="true"></i>
+            </button></td>
             <td style="white-space: nowrap">
                 <a routerLink="edit/{{person.id}}" class="btn btn-sm bg-primary mr-1 text-white"><i class="fa fa-pencil" aria-hidden="true"></i>   Edit</a>
-                <button (click)="deleteUser(person.id)" class="btn btn-sm btn-danger bg-delete-user" [disabled]="person.isDeleting">
+                <button (click)="deletePerson(person.id)" class="btn btn-sm btn-danger bg-delete-user" [disabled]="person.isDeleting">
                     <span *ngIf="person.isDeleting" class="spinner-border spinner-border-sm"></span>
                     <span *ngIf="!person.isDeleting"><i class="fa fa-trash" aria-hidden="true"></i>  Delete</span>
                 </button>
@@ -39,3 +38,4 @@
         </tr>
     </tbody>
 </table>
+
